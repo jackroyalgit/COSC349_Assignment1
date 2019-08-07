@@ -6,7 +6,8 @@
 <body>
 
 <h1>Where to from now.</h1>
-<p>Time to create multiple VMs</p>
+<p>Time to create multiple VMs</p
+<p>Testing git from windwos machine </p
 
 </body>
 </html>
