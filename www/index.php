@@ -6,6 +6,23 @@
 <body>
 <h1>Test DB on one VM</h1>
 
+<div id="main">
+<h1>Insert data into websiteuser</h1>
+<div id="login">
+<h2>Websiteuser Form</h2>
+<hr/>
+<form action="" method="post">
+<label>First Name :</label>
+<input type="text" name="fname" id="fname" required="required" placeholder="Please Enter First Name"/><br /><br />
+<label>Last Name :</label>
+<input type="text" name="lname" id="lname" required="required" placeholder="Please Enter Second Name"/><br/><br />
+<label>Occupation :</label>
+<input type="text" name="occupation" id="occupation" required="required" placeholder="Please Enter Your Occupation"/><br/><br />
+<input type="submit" value=" Submit " name="submit"/><br />
+</form>
+</div>
+</div>
+
 <p>Showing contents of websiteuserusers table:</p>
 
 <table border="1">
@@ -22,11 +39,19 @@ $pdo_dsn = "mysql:host=$db_host;dbname=$db_name";
 
 $pdo = new PDO($pdo_dsn, $db_user, $db_passwd);
 
+$sql = "INSERT INTO websiteuser (fname, lname, occupation)
+VALUES ('".$_POST["fname"]."','".$_POST["lname"]."','".$_POST["occupation"]."')";
+
+if ($pdo->query($sql)) {
+echo "<script type= 'text/javascript'>alert('New Record Inserted Successfully');</script>";
+}
+
 $q = $pdo->query("SELECT * FROM websiteuser");
 
 while($row = $q->fetch()){
   echo "<tr><td>".$row["fname"]."</td><td>".$row["lname"]."</td><td>".$row["occupation"]."</td></tr>\n";
 }
+
 
 ?>
 </table>
