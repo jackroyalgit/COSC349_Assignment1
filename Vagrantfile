@@ -66,7 +66,21 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
-    apt-get install -y apache2 php libapache2-mod-php
+    apt-get install -y apache2 php libapache2-mod-php php-mysql
+	
+	export MYSQL_PWD='insecure_mysqlroot_pw'
+    echo "mysql-server mysql-server/root_password password $MYSQL_PWD" | debconf-set-selections 
+    echo "mysql-server mysql-server/root_password_again password $MYSQL_PWD" | debconf-set-selections
+    
+	apt-get -y install mysql-server
+	echo "FLUSH PRIVILEGES" | mysql
+    echo "CREATE DATABASE jacksdb;" | mysql
+    echo "CREATE USER 'jackuser1'@'%' IDENTIFIED BY 'password1';" | mysql
+    echo "GRANT ALL PRIVILEGES ON jacksdb.* TO 'jackuser1'@'%'" | mysql
+
+    export MYSQL_PWD='password1'
+    cat /vagrant/testdb.sql | mysql -u jackuser1 jacksdb
+
 
     # Change VM's webserver's configuration to use shared folder.
     # (Look inside assgn-website.conf for specifics.)
@@ -75,6 +89,7 @@ Vagrant.configure("2") do |config|
     a2ensite assgn-website
     a2dissite 000-default
     service apache2 reload
+
   SHELL
 end
 
