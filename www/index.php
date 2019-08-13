@@ -1,14 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html>
-<head><title>Database test page</title>
-</head>
-
 <body>
 <h1>Test DB on one VM</h1>
 
 <div id="main">
 <h1>Insert data into websiteuser</h1>
-<div id="login">
+<div id="websiteuserinput">
 <h2>Websiteuser Form</h2>
 <hr/>
 <form action="" method="post">
@@ -21,7 +18,6 @@
 <input type="submit" value=" Submit " name="submit"/><br />
 </form>
 </div>
-</div>
 
 <p>Showing contents of websiteuserusers table:</p>
 
@@ -30,7 +26,7 @@
 
 <?php
  
-$db_host   = '127.0.0.1';
+$db_host   = '192.68.33.11';
 $db_name   = 'jacksdb';
 $db_user   = 'jackuser1';
 $db_passwd = 'password1';
@@ -45,6 +41,9 @@ VALUES ('".$_POST["fname"]."','".$_POST["lname"]."','".$_POST["occupation"]."')"
 if ($pdo->query($sql)) {
 echo "<script type= 'text/javascript'>alert('New Record Inserted Successfully');</script>";
 }
+else{
+echo "<script type= 'text/javascript'>alert('Data not successfully Inserted.');</script>";
+}
 
 $q = $pdo->query("SELECT * FROM websiteuser");
 
@@ -55,5 +54,7 @@ while($row = $q->fetch()){
 
 ?>
 </table>
+<p>Hello. Do you want to view <a href="127.0.0.1/test.php">test</a> ?</p>
+</div>
 </body>
 </html>

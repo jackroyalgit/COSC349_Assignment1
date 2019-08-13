@@ -6,90 +6,94 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
-
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
+  
   config.vm.box = "ubuntu/xenial64"
 
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  # NOTE: This will enable public access to the opened port
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine and only allow access
-  # via 127.0.0.1 to disable public access
-  config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  #config.vm.network "private_network", ip: "192.168.33.10"
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network "public_network"
-
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
-  config.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant", mount_options: ["dmode=775,fmode=777"]
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
-
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-    apt-get update
-    apt-get install -y apache2 php libapache2-mod-php php-mysql
-	
-	export MYSQL_PWD='insecure_mysqlroot_pw'
-    echo "mysql-server mysql-server/root_password password $MYSQL_PWD" | debconf-set-selections 
-    echo "mysql-server mysql-server/root_password_again password $MYSQL_PWD" | debconf-set-selections
+  config.vm.define "websiteserver" do |websiteserver|
     
-	apt-get -y install mysql-server
-	echo "FLUSH PRIVILEGES" | mysql
-    echo "CREATE DATABASE jacksdb;" | mysql
-    echo "CREATE USER 'jackuser1'@'%' IDENTIFIED BY 'password1';" | mysql
-    echo "GRANT ALL PRIVILEGES ON jacksdb.* TO 'jackuser1'@'%'" | mysql
+	websiteserver.vm.hostname = "websiteserver"
+  
+    # Create a forwarded port mapping which allows access to a specific port
+    # within the machine from a port on the host machine and only allow access
+    # via 127.0.0.1 to disable public access
+    websiteserver.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
 
-    export MYSQL_PWD='password1'
-    cat /vagrant/testdb.sql | mysql -u jackuser1 jacksdb
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+  
+    #Other VMs will follow form of 192.68.33.x with x = 10,11,12 (for our 3 VMs)
+    websiteserver.vm.network "private_network", ip: "192.168.33.10"
+
+    # Share an additional folder to the guest VM. The first argument is
+    # the path on the host to the actual folder. The second argument is
+    # the path on the guest to mount the folder. And the optional third
+    # argument is a set of non-required options.
+    # config.vm.synced_folder "../data", "/vagrant_data"
+    websiteserver.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant", mount_options: ["dmode=775,fmode=777"]
+
+    # Enable provisioning with a shell script. (Could move this into seperate file)
+    websiteserver.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      apt-get install -y apache2 php libapache2-mod-php php-mysql
 
 
-    # Change VM's webserver's configuration to use shared folder.
-    # (Look inside assgn-website.conf for specifics.)
-    cp /vagrant/assgn-website.conf /etc/apache2/sites-available/
-    # install our website configuration and disable the default
-    a2ensite assgn-website
-    a2dissite 000-default
-    service apache2 reload
+      # Change VM's webserver's configuration to use shared folder.
+      # (Look inside assgn-website.conf for specifics.)
+      cp /vagrant/assgn-website.conf /etc/apache2/sites-available/
+    
+	  # install our website configuration and disable the default
+      a2ensite assgn-website
+      a2dissite 000-default
+      service apache2 reload
+    SHELL
+  end
+   
+  config.vm.define "dbserver" do |dbserver|
+    dbserver.vm.hostname = "dbserver"
+	
+	#Seperate IP from the website server (have incremented it 1)
+    dbserver.vm.network "private_network", ip: "192.168.33.11"
+    dbserver.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant", mount_options: ["dmode=775,fmode=777"]
+    
+    dbserver.vm.provision "shell", inline: <<-SHELL
+      # Update Ubuntu software packages.
+      apt-get update
+      
+      # We create a shell variable MYSQL_PWD that contains the MySQL root password
+      export MYSQL_PWD='password1'
 
-  SHELL
+      echo "mysql-server mysql-server/root_password password $MYSQL_PWD" | debconf-set-selections 
+      echo "mysql-server mysql-server/root_password_again password $MYSQL_PWD" | debconf-set-selections
+
+      # Install the MySQL database server.
+      apt-get -y install mysql-server
+
+      # Run some setup commands to get the database ready to use.
+      # First create a database.
+      echo "CREATE DATABASE jacksdb;" | mysql
+
+      # Then create a database user "jackuser1" with the given password.
+      echo "CREATE USER 'jackuser1'@'%' IDENTIFIED BY 'password1';" | mysql
+
+      # Grant all permissions to the database user "webuser" regarding
+      # the "fvision" database that we just created, above.
+      echo "GRANT ALL PRIVILEGES ON jacksdb.* TO 'jackuser1'@'%'" | mysql
+      
+      # Set the MYSQL_PWD shell variable that the mysql command will
+      # try to use as the database password ...
+      export MYSQL_PWD='password1'
+
+      #The mysql command specifies both
+      # the user to connect as (webuser) and the database to use (fvision).
+      cat /vagrant/setup-database.sql | mysql -u jackuser1 jacksdb
+
+	  #Allow public connection
+      sed -i'' -e '/bind-address/s/127.0.0.1/0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
+
+      # We then restart the MySQL server to ensure that it picks up
+      # our configuration changes.
+      service mysql restart
+    SHELL
+  end
 end
 
