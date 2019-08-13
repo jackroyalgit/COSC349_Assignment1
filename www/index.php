@@ -19,11 +19,6 @@
 </form>
 </div>
 
-<p>Showing contents of websiteuserusers table:</p>
-
-<table border="1">
-<tr><th>First Name</th><th>Last Name</th><th>Occupation</th></tr>
-
 <?php
  
 $db_host   = '192.168.33.11';
@@ -45,16 +40,10 @@ else{
 echo "<script type= 'text/javascript'>alert('Data not successfully Inserted.');</script>";
 }
 
-$q = $pdo->query("SELECT * FROM websiteuser");
-
-while($row = $q->fetch()){
-  echo "<tr><td>".$row["fname"]."</td><td>".$row["lname"]."</td><td>".$row["occupation"]."</td></tr>\n";
-}
-
 
 ?>
 </table>
-<p>Hello. Do you want to view <a href="http://192.168.33.12">test</a> ?</p>
+<p>Hello. Do you want to view the <a href="http://192.168.33.12"> querysite</a>?</p>
 </div>
 </body>
 </html>
