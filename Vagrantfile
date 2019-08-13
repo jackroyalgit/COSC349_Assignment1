@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "websiteserver" do |websiteserver|
     
-	websiteserver.vm.hostname = "websiteserver"
+    websiteserver.vm.hostname = "websiteserver"
   
     # Create a forwarded port mapping which allows access to a specific port
     # within the machine from a port on the host machine and only allow access
@@ -40,18 +40,43 @@ Vagrant.configure("2") do |config|
       # Change VM's webserver's configuration to use shared folder.
       # (Look inside assgn-website.conf for specifics.)
       cp /vagrant/assgn-website.conf /etc/apache2/sites-available/
-    
-	  # install our website configuration and disable the default
+
+      # install our website configuration and disable the default
       a2ensite assgn-website
       a2dissite 000-default
       service apache2 reload
     SHELL
   end
-   
+
+  config.vm.define "queryserver" do |queryserver|
+
+    queryserver.vm.hostname = "queryserver"
+
+    queryserver.vm.network "forwarded_port", guest: 80, host: 8081, host_ip: "127.0.0.1"
+
+    queryserver.vm.network "private_network", ip: "192.168.33.12"
+
+    queryserver.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant", mount_options: ["dmode=775,fmode=777"]
+
+    queryserver.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      apt-get install -y apache2 php libapache2-mod-php php-mysql
+
+      # Change VM's webserver's configuration to use shared folder.
+      # (Look inside query-website.conf for specifics.)
+      cp /vagrant/query-site.conf /etc/apache2/sites-available/
+
+      # install our website configuration and disable the default
+      a2ensite query-site
+      a2dissite 000-default
+      service apache2 reload
+    SHELL
+  end
+    
   config.vm.define "dbserver" do |dbserver|
     dbserver.vm.hostname = "dbserver"
 	
-	#Seperate IP from the website server (have incremented it 1)
+    #Seperate IP from the website server (have incremented it 1)
     dbserver.vm.network "private_network", ip: "192.168.33.11"
     dbserver.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant", mount_options: ["dmode=775,fmode=777"]
     
@@ -85,7 +110,7 @@ Vagrant.configure("2") do |config|
 
       #The mysql command specifies both
       # the user to connect as (webuser) and the database to use (fvision).
-      cat /vagrant/setup-database.sql | mysql -u jackuser1 jacksdb
+      cat /vagrant/testdb.sql | mysql -u jackuser1 jacksdb
 
 	  #Allow public connection
       sed -i'' -e '/bind-address/s/127.0.0.1/0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf

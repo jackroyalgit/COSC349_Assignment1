@@ -26,7 +26,7 @@
 
 <?php
  
-$db_host   = '192.68.33.11';
+$db_host   = '192.168.33.11';
 $db_name   = 'jacksdb';
 $db_user   = 'jackuser1';
 $db_passwd = 'password1';
