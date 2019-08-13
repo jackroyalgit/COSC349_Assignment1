@@ -54,7 +54,7 @@ while($row = $q->fetch()){
 
 ?>
 </table>
-<p>Hello. Do you want to view <a href="127.0.0.1/test.php">test</a> ?</p>
+<p>Hello. Do you want to view <a href="http://192.168.33.12">test</a> ?</p>
 </div>
 </body>
 </html>

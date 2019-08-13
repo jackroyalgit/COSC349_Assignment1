@@ -100,8 +100,6 @@ Vagrant.configure("2") do |config|
       # Then create a database user "jackuser1" with the given password.
       echo "CREATE USER 'jackuser1'@'%' IDENTIFIED BY 'password1';" | mysql
 
-      # Grant all permissions to the database user "webuser" regarding
-      # the "fvision" database that we just created, above.
       echo "GRANT ALL PRIVILEGES ON jacksdb.* TO 'jackuser1'@'%'" | mysql
       
       # Set the MYSQL_PWD shell variable that the mysql command will
