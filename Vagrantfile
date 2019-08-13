@@ -92,7 +92,8 @@ Vagrant.configure("2") do |config|
 
       # Install the MySQL database server.
       apt-get -y install mysql-server
-
+      echo "DROP DATABASE IF EXISTS jacksdb;" | mysql
+      echo "DROP USER IF EXISTS 'jackuser1', remote;" | mysql
       # Run some setup commands to get the database ready to use.
       # First create a database.
       echo "CREATE DATABASE jacksdb;" | mysql
