@@ -32,20 +32,7 @@ Vagrant.configure("2") do |config|
     websiteserver.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant", mount_options: ["dmode=775,fmode=777"]
 
     # Enable provisioning with a shell script. (Could move this into seperate file)
-    websiteserver.vm.provision "shell", inline: <<-SHELL
-      apt-get update
-      apt-get install -y apache2 php libapache2-mod-php php-mysql
-
-
-      # Change VM's webserver's configuration to use shared folder.
-      # (Look inside assgn-website.conf for specifics.)
-      cp /vagrant/assgn-website.conf /etc/apache2/sites-available/
-
-      # install our website configuration and disable the default
-      a2ensite assgn-website
-      a2dissite 000-default
-      service apache2 reload
-    SHELL
+    websiteserver.vm.provision "shell", path: "webscript.sh"
   end
 
   config.vm.define "queryserver" do |queryserver|
@@ -92,8 +79,10 @@ Vagrant.configure("2") do |config|
 
       # Install the MySQL database server.
       apt-get -y install mysql-server
+
       echo "DROP DATABASE IF EXISTS jacksdb;" | mysql
       echo "DROP USER IF EXISTS 'jackuser1', remote;" | mysql
+
       # Run some setup commands to get the database ready to use.
       # First create a database.
       echo "CREATE DATABASE jacksdb;" | mysql
@@ -111,7 +100,7 @@ Vagrant.configure("2") do |config|
       # the user to connect as (webuser) and the database to use (fvision).
       cat /vagrant/testdb.sql | mysql -u jackuser1 jacksdb
 
-	  #Allow public connection
+      #Allow public connection
       sed -i'' -e '/bind-address/s/127.0.0.1/0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
 
       # We then restart the MySQL server to ensure that it picks up
