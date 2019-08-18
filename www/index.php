@@ -1,8 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html>
 <body>
-<h1>Test DB on one VM</h1>
-
 <div id="main">
 <h1>Insert data into websiteuser</h1>
 <div id="websiteuserinput">
@@ -15,6 +13,12 @@
 <input type="text" name="lname" id="lname" required="required" placeholder="Please Enter Second Name"/><br/><br />
 <label>Occupation :</label>
 <input type="text" name="occupation" id="occupation" required="required" placeholder="Please Enter Your Occupation"/><br/><br />
+<label>Favourite Food :</label>
+<input type="text" name="food" id="food" required="required" placeholder="Favourite Food?"/><br/><br />
+<label>Favourite Music :</label>
+<input type="text" name="music" id="music" required="required" placeholder="Favourite Music?"/><br/><br />
+<label>Favourite Sport :</label>
+<input type="text" name="sport" id="sport" required="required" placeholder="Favourite Sport?"/><br/><br />
 <input type="submit" value=" Submit " name="submit"/><br />
 </form>
 </div>
@@ -30,8 +34,8 @@ $pdo_dsn = "mysql:host=$db_host;dbname=$db_name";
 
 $pdo = new PDO($pdo_dsn, $db_user, $db_passwd);
 
-$sql = "INSERT INTO websiteuser (fname, lname, occupation)
-VALUES ('".$_POST["fname"]."','".$_POST["lname"]."','".$_POST["occupation"]."')";
+$sql = "INSERT INTO websiteuser (fname, lname, occupation, food, music, sport)
+VALUES ('".$_POST["fname"]."','".$_POST["lname"]."','".$_POST["occupation"]."','".$_POST["food"]."','".$_POST["music"]."','".$_POST["sport"]."')";
 
 if ($pdo->query($sql)) {
 echo "<script type= 'text/javascript'>alert('New Record Inserted Successfully');</script>";
@@ -39,7 +43,6 @@ echo "<script type= 'text/javascript'>alert('New Record Inserted Successfully');
 else{
 echo "<script type= 'text/javascript'>alert('Data not successfully Inserted.');</script>";
 }
-
 
 ?>
 </table>

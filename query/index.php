@@ -5,7 +5,7 @@
   <body>
     <p>Showing contents of websiteuserusers table:</p>
     <table border="1">
-      <tr><th>First Name</th><th>Last Name</th><th>Occupation</th></tr>
+      <tr><th>First Name</th><th>Last Name</th><th>Occupation</th><th>Fav Food</th><th>Fav Music</th><th>Fav Sport</th></tr>
 
       <?php
          $db_host   = '192.168.33.11';
@@ -19,7 +19,7 @@
          $q = $pdo->query("SELECT * FROM websiteuser");
 
       while($row = $q->fetch()){
-      echo "<tr><td>".$row["fname"]."</td><td>".$row["lname"]."</td><td>".$row["occupation"]."</td></tr>\n";
+      echo "<tr><td>".$row["fname"]."</td><td>".$row["lname"]."</td><td>".$row["occupation"]."</td><td>".$row["food"]."</td><td>".$row["music"]."</td><td>".$row["sport"]."</td></tr>\n";
       }
 
 
