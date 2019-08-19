@@ -24,7 +24,7 @@
 </div>
 
 <?php
- 
+if(isset($_POST["submit"])){ 
 $db_host   = '192.168.33.11';
 $db_name   = 'jacksdb';
 $db_user   = 'jackuser1';
@@ -40,8 +40,10 @@ VALUES ('".$_POST["fname"]."','".$_POST["lname"]."','".$_POST["occupation"]."','
 if ($pdo->query($sql)) {
 echo "<script type= 'text/javascript'>alert('New Record Inserted Successfully');</script>";
 }
+
 else{
 echo "<script type= 'text/javascript'>alert('Data not successfully Inserted.');</script>";
+}
 }
 
 ?>
