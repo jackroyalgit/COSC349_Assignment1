@@ -1,12 +1,13 @@
 <html>
+  <link rel="stylesheet"type="text/css" href="style.css">
+  <div id="main">
   <head>
-    <title>PHP Test</title>
   </head>
   <body>
-    <p>Showing contents of websiteuserusers table:</p>
+    <h1>Showing contents of websiteuserusers table:</h1>
     <table border="1">
       <tr><th>First Name</th><th>Last Name</th><th>Occupation</th><th>Fav Food</th><th>Fav Music</th><th>Fav Sport</th></tr>
-
+  </div>
       <?php
          $db_host   = '192.168.33.11';
          $db_name   = 'jacksdb';
@@ -21,8 +22,6 @@
       while($row = $q->fetch()){
       echo "<tr><td>".$row["fname"]."</td><td>".$row["lname"]."</td><td>".$row["occupation"]."</td><td>".$row["food"]."</td><td>".$row["music"]."</td><td>".$row["sport"]."</td></tr>\n";
       }
-
-
       ?>
     </table>
     <p>Hello would you like to input some <a href="http://192.168.33.10"> data</a>?</p>

@@ -1,10 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html>
+<link rel="stylesheet"type="text/css" href="style.css">
 <body>
 <div id="main">
-<h1>Insert data into websiteuser</h1>
+<h1>Company X - User Survey</h1>
 <div id="websiteuserinput">
-<h2>Websiteuser Form</h2>
+<h2>Company Employee</h2>
 <hr/>
 <form action="" method="post">
 <label>First Name :</label>
@@ -38,7 +39,7 @@ $sql = "INSERT INTO websiteuser (fname, lname, occupation, food, music, sport)
 VALUES ('".$_POST["fname"]."','".$_POST["lname"]."','".$_POST["occupation"]."','".$_POST["food"]."','".$_POST["music"]."','".$_POST["sport"]."')";
 
 if ($pdo->query($sql)) {
-echo "<script type= 'text/javascript'>alert('New Record Inserted Successfully');</script>";
+echo "<script type= 'text/javascript'>alert('New User Inserted Succesfully');</script>";
 }
 
 else{
@@ -48,7 +49,7 @@ echo "<script type= 'text/javascript'>alert('Data not successfully Inserted.');<
 
 ?>
 </table>
-<p>Hello. Do you want to view the <a href="http://192.168.33.12"> querysite</a>?</p>
+<p>Hello. Do you want to view the <a href="http://192.168.33.12"> results from the survey</a>?</p>
 </div>
 </body>
 </html>
