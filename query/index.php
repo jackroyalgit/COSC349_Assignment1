@@ -23,7 +23,21 @@
       echo "<tr><td>".$row["fname"]."</td><td>".$row["lname"]."</td><td>".$row["occupation"]."</td><td>".$row["food"]."</td><td>".$row["music"]."</td><td>".$row["sport"]."</td></tr>\n";
       }
       ?>
-    </table>
+  </table>
+
+
+  <h1>Showing first and last names of websiteuserusers table:</h1>
+  <table border="1">
+    <tr><th>First Name</th><th>Last Name</th><tr>
+
+   <?php
+         $q = $pdo->query("SELECT fname,lname FROM websiteuser");
+      while($row = $q->fetch()){
+      echo "<tr><td>".$row["fname"]."</td><td>".$row["lname"]."</td><tr>\n";
+    }
+    ?>
+  </table>
+   
     <p>Hello would you like to input some <a href="http://192.168.33.10"> data</a>?</p>
   </body>
 </html>
