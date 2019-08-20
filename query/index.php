@@ -26,14 +26,13 @@
   </table>
 
 
-  <h1>Showing first and last names of websiteuserusers table:</h1>
+  <h1>Showing first, last names of websiteuserusers table:</h1>
   <table border="1">
-    <tr><th>First Name</th><th>Last Name</th><tr>
-
+    <tr><th>First Name</th><th>Last Name</th></tr>
    <?php
-         $q = $pdo->query("SELECT fname,lname FROM websiteuser");
-      while($row = $q->fetch()){
-      echo "<tr><td>".$row["fname"]."</td><td>".$row["lname"]."</td><tr>\n";
+      $q1 = $pdo->query("SELECT fname,lname FROM websiteuser");
+      while($row = $q1->fetch()){
+      echo "<tr><td>".$row["fname"]."</td><td>".$row["lname"]."</td></tr>\n";
     }
     ?>
   </table>
