@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
     #Synced folder to work on host machine
     dbserver.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant", mount_options: ["dmode=775,fmode=777"]
 
-    #External provisioning script that defines the queryserver
+    #External provisioning script that defines the database server
     dbserver.vm.provision "shell", path:"dbserverscript.sh"
   end
 end
